@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="https://admin.tago.io/dist/custom-widget.min.js"></script>
+    <style>
+      .responsive {
+        width: 100%;
+        height: auto;
+      }
+    </style>
+    <title>Hidrometro</title>
+  </head>
+  <body>
+    <div>
+      <canvas class="responsive" id="tela" width="500" height="300"></canvas>
+    </div>  
+
+    <script>
+      var tela = document.getElementById("tela");
+      var c = tela.getContext("2d");
+
+      function desenhaImagem() {
+        var imagem = new Image();
+        imagem.src = "https://api.tago.io/file/62bf0fedbfdb420011c99c45/html/hidrometroFundo.gif";
+        imagem.onload = function() {
+          c.drawImage(imagem,1,1);
+          window.TagoIO.onRealtime((data) => {
+            c.clearRect(200, 92, 98, 30);
+            let leitura = data[0].result[0].value;
+            c.font="25px arial";
+            c.fillStyle = "black";
+            c.fillText(leitura,205 , 115);
+            // c.fillStyle = "red";
+            // c.fillText(leitura.slice(3,6),250 , 115);
+          })
+        }
+      }
+      desenhaImagem();
+
+      window.TagoIO.onStart((widget) => {
+        window.widget = widget;
+        window.TagoIO.ready();
+      });
+
+      window.TagoIO.ready();
+    </script>
+    
+  </body>
+</html>
